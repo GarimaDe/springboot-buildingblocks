@@ -1,6 +1,9 @@
 package com.example.springboottutorial.springboot100steps.entities;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Size;
 
 @Entity
 @Table(name="user")
@@ -8,9 +11,13 @@ public class User {
     @Id
     @GeneratedValue
     private  Long id;
+
     @Column(name="USER_NAME", length = 50, nullable = false, unique = true)
+    @NotBlank(message = "Username is mandatory field. Please provide username")
     private  String username;
+
     @Column(name="FIRST_NAME", length = 50, nullable = false)
+    @Size(min=2, message = "First name should have atleast 2 characters")
     private  String firstName;
     @Column(name="LAST_NAME", length = 50, nullable = false)
     private String lastName;

@@ -2,20 +2,25 @@ package com.example.springboottutorial.springboot100steps.controllers;
 
 import com.example.springboottutorial.springboot100steps.entities.User;
 import com.example.springboottutorial.springboot100steps.exceptions.UserExistsException;
+import com.example.springboottutorial.springboot100steps.exceptions.UserNameNotFoundException;
 import com.example.springboottutorial.springboot100steps.exceptions.UserNotFoundException;
 import com.example.springboottutorial.springboot100steps.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import javax.validation.Valid;
+import javax.validation.constraints.Min;
 import java.util.List;
 import java.util.Optional;
 
 @RestController
+@Validated
 public class UserController {
 
     //Autowire UserService
@@ -30,7 +35,7 @@ public class UserController {
     }
 
     @PostMapping("/users")
-    public ResponseEntity<Void> createUser(@RequestBody User user, UriComponentsBuilder builder)
+    public ResponseEntity<Void> createUser(@Valid @RequestBody User user, UriComponentsBuilder builder)
     {
         try{
             userService.createUser(user);
@@ -46,7 +51,7 @@ public class UserController {
     }
 
     @GetMapping("/users/{id}")
-    public Optional<User> getUserById(@PathVariable("id") Long id)
+    public Optional<User> getUserById(@PathVariable("id") @Min(1)Long id)
     {
         try{
             return userService.getUserById(id);
@@ -75,8 +80,13 @@ public class UserController {
     }
 
     @GetMapping("/users/byusername/{username}")
-    public User getUserByUsername(@PathVariable("username") String username)
+    public User getUserByUsername(@PathVariable("username") String username) throws UserNameNotFoundException
     {
-        return userService.getUserByUserName(username);
+        User user= userService.getUserByUserName(username);
+        if(user==null)
+        {
+            throw new UserNameNotFoundException("Username '"+username+"' not found in User repositoory");
+        }
+        return user;
     }
 }
