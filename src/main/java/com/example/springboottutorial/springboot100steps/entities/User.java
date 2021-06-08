@@ -5,10 +5,10 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 import java.util.List;
-
+import org.springframework.hateoas.RepresentationModel;
 @Entity
 @Table(name="users")
-public class User {
+public class User extends RepresentationModel{
     @Id
     @GeneratedValue
     private  Long id;
