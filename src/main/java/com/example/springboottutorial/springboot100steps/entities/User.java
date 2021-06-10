@@ -50,11 +50,15 @@ public class User extends RepresentationModel{
     @JsonView(Views.Internal.class)
     private List<Order> orders;
 
+    @Column(name="ADDRESS")
+    private String address;
+
     //No Argument Constructor
     public User() {
     }
     //Fields Constructor
-    public User(Long id, String username, String firstName, String lastName, String email, String role, String ssn) {
+
+    public User(Long id, @NotBlank(message = "Username is mandatory field. Please provide username") String username, @Size(min = 2, message = "First name should have atleast 2 characters") String firstName, String lastName, String email, String role, String ssn, List<Order> orders, String address) {
         this.id = id;
         this.username = username;
         this.firstName = firstName;
@@ -62,7 +66,10 @@ public class User extends RepresentationModel{
         this.email = email;
         this.role = role;
         this.ssn = ssn;
+        this.orders = orders;
+        this.address = address;
     }
+
 
     //Getters and Setters
 
@@ -129,7 +136,16 @@ public class User extends RepresentationModel{
     public void setOrders(List<Order> orders) {
         this.orders = orders;
     }
-//ToString
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    //ToString
 
 
     @Override
@@ -143,6 +159,7 @@ public class User extends RepresentationModel{
                 ", role='" + role + '\'' +
                 ", ssn='" + ssn + '\'' +
                 ", orders=" + orders +
+                ", address='" + address + '\'' +
                 '}';
     }
 }
